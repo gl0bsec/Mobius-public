@@ -1,4 +1,4 @@
-# Möbius
+![banner2x](/Users/geist/Desktop/Workspace/Mobius-public/banner2x.png)
 
 Möbius packages a data-transformation workflow — Python/R scripts, SQL, and a front-end — into a single portable artifact, then re-runs it on *similarly but not identically structured* datasets. 
 
