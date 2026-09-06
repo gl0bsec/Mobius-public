@@ -1,13 +1,10 @@
 # Möbius
 
-Möbius packages a data-transformation workflow — Python/R scripts, SQL, and a
-front-end — into a single portable artifact, then re-runs it on *similarly but
-not identically structured* datasets. The recipient never edits the workflow to
-fit their data; they write a **binding** that maps their columns onto the
-package's expectations, and run it.
+Möbius packages a data-transformation workflow — Python/R scripts, SQL, and a front-end — into a single portable artifact, then re-runs it on *similarly but not identically structured* datasets. 
 
-It is one static binary. No daemon, no server to stand up, no telemetry, and no
-dependency beyond the machine's own Python or R when a package uses them.
+The recipient never edits the workflow to fit their data; they write a **binding** that maps their columns onto the package's expectations, and run it.
+
+It is one static binary. No daemon, no server to stand up, no telemetry, and no dependency beyond the machine's own Python or R when a package uses them.
 
 ## What it is for
 
@@ -89,15 +86,7 @@ resolved, and whether the run was self-contained.
 
 # Quickstart 1 — Setting up Möbius
 
-Two routes. A pre-built archive needs nothing installed; building from source
-needs Go and a C++ toolchain.
-
-| Route | Platforms | Use when |
-|---|---|---|
-| Pre-built release | macOS arm64, macOS amd64 | You just want to run Möbius |
-| Build from source | macOS arm64/amd64, Linux amd64/arm64 | You are on Linux, or working on Möbius itself |
-
-### Install a pre-built release
+### Install a pre-built release (MacOS only)
 
 Releases ship one tarball per platform plus a `SHA256SUMS` file. Each archive
 extracts to a single directory holding the `mobius` binary, `LICENSE`,
@@ -130,109 +119,6 @@ arrives via a browser. Either download with `curl -L`, or clear the flag:
 ```bash
 xattr -d com.apple.quarantine ~/.local/bin/mobius    # if macOS refuses to run it
 ```
-
-**No Linux archive is published.** Release builds for Linux exist in
-`scripts/release.sh` but run inside a Docker container and have never been
-executed, so on Linux build from source below — it is the tested path.
-
-### Prerequisites for building from source
-
-| Requirement | Needed for | Notes |
-|---|---|---|
-| Go 1.26+, `CGO_ENABLED=1` | Building the binary | DuckDB is statically linked, so the binary is ~73 MB |
-| A C and C++ toolchain | cgo linking DuckDB | Installed per platform below |
-| `uv` | Packages that ship a `uv.lock` | Optional if you always pass `--python` |
-| Python 3.10+ | Packages with Python steps | Any virtualenv you already have works |
-| R + `Rscript` | Packages with R steps | Only if you use them |
-
-DuckDB itself needs no installation: a pre-built static library is selected by
-`GOOS`/`GOARCH` at build time.
-
-### Build and install — macOS
-
-Supported on arm64 and amd64.
-
-```bash
-xcode-select --install                        # C/C++ toolchain (one-time)
-
-cd tools/Mobius
-make build                                    # go build -tags duckdb_arrow -o bin/mobius
-ln -sf "$PWD/bin/mobius" ~/.local/bin/mobius  # put `mobius` on PATH (one-time)
-
-mobius --help
-```
-
-`~/.local/bin` is usually not on `PATH` on macOS. Add it to your shell profile:
-
-```bash
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
-```
-
-### Build and install — Linux
-
-Supported on amd64 and arm64, glibc-based distributions.
-
-```bash
-sudo apt-get install build-essential          # Debian/Ubuntu (one-time)
-# sudo dnf install gcc-c++ make               # Fedora/RHEL
-
-cd tools/Mobius
-make build                                    # go build -tags duckdb_arrow -o bin/mobius
-ln -sf "$PWD/bin/mobius" ~/.local/bin/mobius  # put `mobius` on PATH (one-time)
-
-mobius --help
-```
-
-`~/.local/bin` is already on `PATH` on most distributions. If `mobius --help`
-is not found, add it as in the macOS block above (using `~/.bashrc`).
-
-### Notes on the build
-
-The symlink points at `bin/mobius`, so every rebuild is picked up with no
-reinstall. If you would rather not touch `PATH`, call `./bin/mobius` everywhere.
-
-Use `make build` rather than a bare `go build`: the `duckdb_arrow` tag compiles
-in the Arrow reader, without which `mobius serve` returns `501` for
-`?format=arrow` (Parquet, JSON, and CSV still work).
-
-`build-essential` / `xcode-select` matter because DuckDB is a C++ library — a C
-compiler alone will not link it. A build failing with `undefined: conn` means
-cgo was unavailable: install the toolchain and check `go env CGO_ENABLED` prints
-`1`. Cross-compiling disables cgo automatically, so a cross build needs
-`CC=<cross compiler> CGO_ENABLED=1`.
-
-**Other platforms.** Windows amd64 has a pre-built DuckDB library, but Möbius is
-untested there (spec M5). Alpine/musl, FreeBSD, and other architectures have no
-pre-built library — build `libduckdb` yourself and pass `-tags=duckdb_use_lib` or
-`-tags=duckdb_use_static_lib`.
-
-### Cutting a release
-
-For maintainers. `release.sh` builds and packs; `snapshot.sh` publishes.
-
-```bash
-# 1. Write the notes for the tag
-cp release-notes/TEMPLATE.md release-notes/v0.1.0-Alpha.md
-
-# 2. Point the config at them: release_tag, release_name, release_notes
-$EDITOR scripts/release.yml
-
-# 3. Build, check, publish
-scripts/release.sh -v v0.1.0-Alpha                 # → dist/*.tar.gz + dist/SHA256SUMS
-scripts/snapshot.sh -c scripts/release.yml -n      # dry run: what would be pushed
-scripts/snapshot.sh -c scripts/release.yml         # publish via `gh`
-```
-
-Release notes live one file per tag in [release-notes/](release-notes/) and
-become the GitHub release body. The commit subject for the files pushed
-alongside comes from `-m` or the config's `message:`; the release title from
-`release_name:`. Title and body are applied only when a release is **created** —
-re-running against an existing tag replaces its assets and leaves both alone.
-
-Both darwin arches build on a macOS host with the system clang. Linux targets
-(`-t linux/amd64,linux/arm64`) build in a `golang` container and need Docker
-running; that path is written but untested. Re-running with an existing tag
-replaces that release's assets rather than failing.
 
 ### Point Möbius at your work
 
