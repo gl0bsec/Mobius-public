@@ -161,21 +161,6 @@ Live application front-ends are served from the process itself, under `/app/<dep
 ```
 
 
-### State and Durability
-
-| What                      | Where it lives                                           | Survives a restart |
-| ------------------------- | -------------------------------------------------------- | ------------------ |
-| API run and call records  | In-Memory                                                | **No**             |
-| Package                   | Its own directory, or a `.mobius` archive                | Yes — shareable    |
-| Binding                   | `binding.yaml`within a dataset directory                 | Yes — shareable    |
-| Run output                | The `-o` directory: bundle, manifest, exports, front-end | Yes                |
-| Library and index         | `<user-config-dir>/mobius/library.json`, `index.json`    | Yes — caches only  |
-| Deployment record and log | `<user-config-dir>/mobius/deployments/<id>/`             | Yes                |
-| Deployment output         | `<workspace>/.mobius/deployments/<id>/`                  | Yes                |
-
-Möbius runs no daemon. A deployment outlives the session because its record is on disk. When serving live applications, the engine forgets its run and call records on restart while preserving pre-declared output bundles. 
-
-
 
 # Quickstart 1 — Setting up Möbius
 
