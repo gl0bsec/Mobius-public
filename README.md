@@ -2,7 +2,7 @@
 
 Möbius is an execution engine and development framework for building  auditible, re-usable and portable  analytics pipelines and applications.   
 
-Workflows, applications and their associated runtime specifications are packaged into a single sharable artifact, designed to..  with stability, security and reproducability in mind . 
+Workflows, applications and their associated runtime specifications are packaged into a single sharable artifact, designed with stability and reproducability in mind . 
 
 When shared with another user, the recipient they author a **binding** that maps the the schema of their dataset (or sets) onto the package's expectations, and run it.  The engine absorbs the overhead costs of installation and system configuration by assembling a purpose-built virtual environment to the package's own pinned specification.  
 
