@@ -19,7 +19,7 @@ Both are desktop applications in the ordinary sense: local files, local compute,
 
 ## Overview
 
-### The anatomy of a package
+### The Anatomy Of a Package
 
 A package is a directory, or a `.mobius` tarball of the following spec:
 
@@ -44,7 +44,7 @@ Everything in it is plain text, so a package diffs, reviews and version-controls
 
 Packages dont contain contain any reference to a particular dataset. `schemas/` states the canonical structure of the rowsthe package processes; a binding states how one specific dataset satisfies it. That separation is what makes the same package runnable by someone whose columns are named differently.
 
-### The engine 
+### The Engine 
 
 ```
      CLI            hub            serve            MDM
@@ -74,7 +74,7 @@ Users, agents and applications can interact with the engine through one of four 
 | **CLI**                | `mobius run`, `bind`, `package`, … | **Humans and Agents:** Scripting, CI, headless runs          |
 | **Local JSON API**     | `mobius serve`                     | **Live workflows or applications:** Other tools, and live front-ends calling back into the engine |
 
-### Making and using packages 
+### Making and Using Packages 
 
 **The Mobius engine handles all four stages of a package's lifecycle:** 
 
@@ -161,7 +161,7 @@ Live application front-ends are served from the process itself, under `/app/<dep
 ```
 
 
-### State and durability
+### State and Durability
 
 | What                      | Where it lives                                           | Survives a restart |
 | ------------------------- | -------------------------------------------------------- | ------------------ |
