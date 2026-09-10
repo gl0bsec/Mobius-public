@@ -1,12 +1,18 @@
 ![banner2x](banner2x.png)
 
-Möbius is an execution engine and development framework for building  auditible, re-usable and portable  analytics pipelines and applications.   
+Möbius is an **execution engine and development framework** designed for **humans and agents** turn turning **single-use** analytics pipelines and applications into **auditible, re-usable ones**.
 
-Workflows, applications and their associated runtime specifications are packaged into a single sharable artifact, designed with stability and reproducability in mind . 
+The engine **packages** workflows, applications and their associated runtime specifications into a singlular sharable artifacts, designed with stability and reproducability in mind .
 
-When shared with another user, the recipient they author a **binding** that maps the the schema of their dataset (or sets) onto the package's expectations, and run it.  The engine absorbs the overhead costs of installation and system configuration by assembling a purpose-built virtual environment to the package's own pinned specification.  
+To do so, it abstracts the data ingest and run-time configuration process to a series of plaintext-declared parameters and virtual environments. As a result, it elimiates installation overheads and  JS framework bloat, while improving sharability, stability and result re-producability. 
 
-Workflow results are emitted into a **result bundle**, a single DuckDB file with a generated [Frictionless](https://frictionlessdata.io/) `datapackage.json` containing  each result table's inferred schema and the relations between them beside it. Result bundles themselves are  valid Möbius inputs, enabling the chaining of workflows and applications. 
+
+
+**How it works:**  
+
+When mobius package is shared with another user, the recipient can author a **binding** that maps the the schema of their dataset (or sets) onto the package's expectations and run it. The engine absorbs the overhead costs of installation and system configuration by assembling a purpose-built virtual environment to the package's own pinned specification.
+
+Workflow results are emitted into a **result bundle**, a single DuckDB file with a generated [Frictionless](https://frictionlessdata.io/) `datapackage.json` containing each result table's inferred schema and the relations between them beside it. Result bundles themselves are valid Möbius inputs, enabling the chaining of workflows and applications.
 
 A package may also ship a front-end, which the engine wires to that bundle in one of two forms:
 
@@ -17,7 +23,7 @@ A package may also ship a front-end, which the engine wires to that bundle in on
 
 Both are desktop applications in the ordinary sense: local files, local compute, no cloud account, no network unless a step asks for one.
 
-## Overview
+## System Overview
 
 ### The Anatomy Of a Package
 
